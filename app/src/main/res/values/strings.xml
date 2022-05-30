@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">APITester</string>
+    <string name="api_tester">API Tester</string>
+    <string name="enter_url">Enter URL</string>
+    <string name="enter_header">Enter Header</string>
+    <string name="get_request">Get Request</string>
+    <string name="post_request">POST Request</string>
+    <string name="response_code">Response Code</string>
+    <string name="request_response_headers">Request/Response Headers</string>
+    <string name="request_response_body">Request/Response Body</string>
+    <string name="errors">Errors</string>
+    <string name="enter_request_body">Enter Request Body</string>
 </resources>
