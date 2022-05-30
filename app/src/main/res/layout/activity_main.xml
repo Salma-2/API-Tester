@@ -20,7 +20,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/enter_url"
-            android:inputType="textUri|textWebEmailAddress"
+            android:inputType="textUri"
             android:minHeight="48dp"
             android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,13 +64,13 @@
                 android:id="@+id/get_rb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="@string/get_request" />
 
             <RadioButton
                 android:id="@+id/post_rb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="@string/post_request" />
         </RadioGroup>
 
@@ -134,9 +134,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/body_scrollview"
+            app:layout_constraintTop_toBottomOf="@+id/test_btn"
             tools:text="200" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -174,7 +174,15 @@
             app:layout_constraintTop_toBottomOf="@+id/body_tv"
             tools:text="No Internet Connection" />
 
-
+        <Button
+            android:id="@+id/test_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/test"
+            app:layout_constraintEnd_toEndOf="@+id/url_et"
+            app:layout_constraintStart_toStartOf="@+id/url_et"
+            app:layout_constraintTop_toBottomOf="@+id/body_scrollview" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

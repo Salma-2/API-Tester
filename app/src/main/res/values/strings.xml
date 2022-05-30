@@ -10,4 +10,5 @@
     <string name="request_response_body">Request/Response Body</string>
     <string name="errors">Errors</string>
     <string name="enter_request_body">Enter Request Body</string>
+    <string name="test">Test</string>
 </resources>
