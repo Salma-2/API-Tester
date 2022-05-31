@@ -11,4 +11,5 @@
     <string name="errors">Errors</string>
     <string name="enter_request_body">Enter Request Body</string>
     <string name="test">Test</string>
+    <string name="no_internet_error">No Internet Connection!</string>
 </resources>
