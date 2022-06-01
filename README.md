@@ -7,7 +7,7 @@
 }
 ```
 # No WiFi
-![image](https://user-images.githubusercontent.com/48512714/171503268-1c46938e-dab0-4af0-a65a-916298f32355.png)
+![image](https://user-images.githubusercontent.com/48512714/171503268-1c46938e-dab0-4af0-a65a-916298f32355.png | width=100)
 
 
 
