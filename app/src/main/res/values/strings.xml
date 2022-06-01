@@ -2,14 +2,17 @@
     <string name="app_name">APITester</string>
     <string name="api_tester">API Tester</string>
     <string name="enter_url">Enter URL</string>
-    <string name="enter_header">Enter Header</string>
+    <string name="enter_header">Enter Request Headers</string>
     <string name="get_request">Get Request</string>
     <string name="post_request">POST Request</string>
     <string name="response_code">Response Code</string>
-    <string name="request_response_headers">Request/Response Headers</string>
-    <string name="request_response_body">Request/Response Body</string>
+    <string name="response_headers">Response Headers</string>
+    <string name="response_body">Response Body</string>
     <string name="errors">Errors</string>
     <string name="enter_request_body">Enter Request Body</string>
     <string name="test">Test</string>
     <string name="no_internet_error">No Internet Connection!</string>
+    <string name="enter_query_params">Enter Query Params</string>
+    <string name="alert">Please Insert Request Body</string>
+    <string name="requested_url">Requested URL</string>
 </resources>

@@ -2,11 +2,11 @@ package com.salma.apitester
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
@@ -32,33 +32,39 @@ class MainActivity : AppCompatActivity() {
         val testBtn = findViewById<Button>(R.id.test_btn)
         val radioGroup = findViewById<RadioGroup>(R.id.rb_group)
         val errorTv = findViewById<TextView>(R.id.errors_tv)
+        val dataEt = findViewById<EditText>(R.id.data_et)
 
         radioGroup.setOnCheckedChangeListener { _, id ->
             Log.d(TAG, "setOnCheckedChangeListener")
-            val bodyEt = findViewById<EditText>(R.id.body_et)
             if (id == R.id.post_rb) {
                 Log.d(TAG, "POST Checked")
-                bodyEt.visibility = View.VISIBLE
+                dataEt.text.clear()
+                dataEt.hint = getString(R.string.enter_request_body)
             } else {
                 Log.d(TAG, "GET Checked")
-                bodyEt.visibility = View.INVISIBLE
+                dataEt.text.clear()
+                dataEt.hint = getString(R.string.enter_query_params)
             }
         }
         testBtn.setOnClickListener {
             val selectedRequest = radioGroup.checkedRadioButtonId
-            resetViews()
+            resetTextViews()
 
             if (checkInternetConnection()) {
                 if (selectedRequest == R.id.post_rb) {
-                    postRequest()
+                    if (dataEt.text.toString() != "") {
+                        postRequest()
+                    } else {
+                        errorTv.text = getString(R.string.alert)
+                    }
                 } else if (selectedRequest == R.id.get_rb) {
                     getRequest()
                 }
             } else {
+                resetTextViews()
                 Log.d(TAG, "no internet connection")
                 errorTv.text = getString(R.string.no_internet_error)
             }
-
 
         }
     }
@@ -69,15 +75,27 @@ class MainActivity : AppCompatActivity() {
         // Inputs
         val urlInput = findViewById<EditText>(R.id.url_et).text.toString()
         val headerInput = findViewById<EditText>(R.id.header_et).text.toString()
+        val queryInput = findViewById<EditText>(R.id.data_et).text.toString()
+
 
         // Create Background Thread
         val runnable = Runnable {
             //Create HTTP connection
             var conn: HttpURLConnection? = null
+            var query = ""
             try {
-                val url = URL(urlInput)
-                conn = url.openConnection() as HttpURLConnection
+                if (queryInput != "") {
+                    val params = JSONObject(queryInput)
+                    val builder: Uri.Builder = Uri.Builder()
+                    for (param in params.keys()) {
+                        builder.appendQueryParameter(param, params.get(param).toString())
+                    }
+                    query = builder.build().encodedQuery!!
+                }
 
+                val url = URL("$urlInput?$query")
+                Log.d("url", url.toString())
+                conn = url.openConnection() as HttpURLConnection
                 //Add headers
                 if (headerInput != "") {
                     val headers = JSONObject(headerInput)
@@ -86,13 +104,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 val reqHeaders = conn.requestProperties
-                Log.d(TAG, "Request Header: $reqHeaders")
-
                 val responseCode = conn.responseCode
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {  // read the response
                     val response = conn.inputStream.bufferedReader().use { it.readText() }
                     val header = conn.headerFields
+
+                    //For Logging
+                    val reqInfo = buildString {
+                        append("URL: ")
+                        append(url)
+                        append("\n")
+                        append("Response Code: ")
+                        append(responseCode)
+                        append("\n")
+                        append("Request Header: ")
+                        append(reqHeaders)
+                    }
+                    Log.d("GET Request Success", reqInfo)
 
                     //update UI
                     handler.post {
@@ -110,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     // Update UI
                     handler.post {
-                        updateUI(errorMessage = errorMessage)
+                        updateUI(errorMessage = errorMessage, responseCode = responseCode.toString())
                     }
                 }
             } catch (e: Exception) {
@@ -131,11 +160,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "---POST Request---")
         /* ------- Get reference to the views ------- */
         // Inputs
-
-
         val urlInput = findViewById<EditText>(R.id.url_et).text.toString()
         val headerInput = findViewById<EditText>(R.id.header_et).text.toString()
-        val bodyInput = findViewById<EditText>(R.id.body_et).text.toString()
+        val bodyInput = findViewById<EditText>(R.id.data_et).text.toString()
 
         //Create Background thread
         val runnable = Runnable {
@@ -147,10 +174,13 @@ class MainActivity : AppCompatActivity() {
                 conn.requestMethod = "POST"
                 // to be able to write content to the connection output stream
                 conn.doOutput = true
-
+                conn.useCaches = true
 
                 //Add headers
-                conn.setRequestProperty("Content-Type", "application/json")  //to send the request body in JSON format
+                conn.setRequestProperty(
+                    "Content-Type",
+                    "application/json"
+                )  //to send the request body in JSON format
                 conn.setRequestProperty("Accept", "application/json")
                 if (headerInput != "") {
                     val headers = JSONObject(headerInput)
@@ -173,6 +203,20 @@ class MainActivity : AppCompatActivity() {
                 if (responseCode == HttpURLConnection.HTTP_CREATED) {
                     val response = conn.inputStream.bufferedReader().use { it.readText() }
                     val header = conn.headerFields
+
+                    //For Logging
+                    val reqInfo = buildString {
+                        append("Response Code: ")
+                        append(responseCode)
+                        append("\n")
+                        append("Request Header: ")
+                        append(reqHeaders)
+                        append("\n")
+                        append("Request Body: ")
+                        append(jsonObject)
+                    }
+                    Log.d("POST Request Success", reqInfo)
+
                     handler.post {
                         updateUI(responseCode.toString(), header.toString(), response)
                     }
@@ -188,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     // Update UI
                     handler.post {
-                        updateUI(errorMessage = errorMessage)
+                        updateUI(errorMessage = errorMessage, responseCode = responseCode.toString())
                     }
                 }
             } catch (e: Exception) {
@@ -203,7 +247,7 @@ class MainActivity : AppCompatActivity() {
         thread.start()
     }
 
-    private fun resetViews() {
+    private fun resetTextViews() {
         val responseCodeTv = findViewById<TextView>(R.id.responsecode_tv)
         val headerTv = findViewById<TextView>(R.id.header_tv)
         val bodyTv = findViewById<TextView>(R.id.body_tv)
@@ -231,7 +275,7 @@ class MainActivity : AppCompatActivity() {
         val bodyTv = findViewById<TextView>(R.id.body_tv)
         val errorTv = findViewById<TextView>(R.id.errors_tv)
 
-        responseCodeTv.text = responseCode.toString()
+        responseCodeTv.text = responseCode
         headerTv.text = header
         bodyTv.text = response
         errorTv.text = errorMessage

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,10 +33,11 @@
             android:id="@+id/header_scrollview"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="@+id/url_et"
             app:layout_constraintStart_toStartOf="@+id/url_et"
-            app:layout_constraintTop_toBottomOf="@+id/url_et">
+            app:layout_constraintTop_toBottomOf="@+id/url_et"
+           >
 
             <EditText
                 android:id="@+id/header_et"
@@ -55,10 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header_scrollview">
+            app:layout_constraintTop_toBottomOf="@+id/data_scrollview">
 
             <RadioButton
                 android:id="@+id/get_rb"
@@ -75,17 +77,16 @@
         </RadioGroup>
 
         <ScrollView
-            android:id="@+id/body_scrollview"
+            android:id="@+id/data_scrollview"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="@+id/url_et"
             app:layout_constraintStart_toStartOf="@+id/url_et"
-            app:layout_constraintTop_toBottomOf="@+id/rb_group"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/header_scrollview">
 
             <EditText
-                android:id="@+id/body_et"
+                android:id="@+id/data_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
@@ -93,104 +94,112 @@
                 android:gravity="start|top"
                 android:hint="@string/enter_request_body"
                 android:inputType="textMultiLine"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColorHint="#757575" />
         </ScrollView>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
             android:text="@string/response_code"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/responsecode_tv" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/request_response_headers"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/header_tv" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/request_response_body"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/body_tv" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/errors"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/errors_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/test_btn" />
 
         <TextView
             android:id="@+id/responsecode_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/test_btn"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
             tools:text="200" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
+
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            android:layout_marginTop="16dp"
+            android:text="@string/response_headers"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/responsecode_tv" />
 
         <TextView
             android:id="@+id/header_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/responsecode_tv"
-            app:layout_constraintTop_toBottomOf="@+id/responsecode_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
             tools:text="Accept: application/json \nContent-Type: application/json" />
 
         <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/response_body"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/header_tv" />
+
+        <TextView
             android:id="@+id/body_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/header_tv"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/header_tv"
-            app:layout_constraintTop_toBottomOf="@+id/header_tv"
-            tools:text="{\nid: 1,\ntitle: 'foo',\nbody: 'bar',\nuserId: 1\n}
-" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            tools:text="{\nid: 1,\ntitle: 'foo',\nbody: 'bar',\nuserId: 1\n}" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/errors"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FF0000"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@id/body_tv" />
 
         <TextView
             android:id="@+id/errors_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/header_tv"
-            app:layout_constraintStart_toStartOf="@+id/body_tv"
-            app:layout_constraintTop_toBottomOf="@+id/body_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView5"
             tools:text="No Internet Connection" />
 
         <Button
             android:id="@+id/test_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:text="@string/test"
             app:layout_constraintEnd_toEndOf="@+id/url_et"
+
             app:layout_constraintStart_toStartOf="@+id/url_et"
-            app:layout_constraintTop_toBottomOf="@+id/body_scrollview" />
+            app:layout_constraintTop_toBottomOf="@+id/rb_group" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
