@@ -16,7 +16,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
@@ -80,44 +79,53 @@ class MainActivity : AppCompatActivity() {
         val runnable = Runnable {
             //Create HTTP connection
 
-//              TODO -> isValidURL
-            val url = URL(urlInput)
-            val conn = url.openConnection() as HttpURLConnection
+//              TODO -> isValidURL try/catch/finally(disconnect)
 
+            var conn:HttpURLConnection? = null
+            try {
+                val url = URL(urlInput)
+                conn = url.openConnection() as HttpURLConnection
 
                 //Add headers
-            for (headerKey in headers.keys) {
-                conn.setRequestProperty(headerKey, headers[headerKey])
-            }
-            val reqHeaders = conn.requestProperties
-            Log.d(TAG, "Request Header: $reqHeaders")
-
-            val responseCode = conn.responseCode
-
-            if (responseCode == HttpURLConnection.HTTP_OK) {  // read the response
-                val response = Util.responseBuilder(conn.inputStream)
-                val header = conn.headerFields
-                //update UI
-                handler.post {
-                    responseCodeTv.text = responseCode.toString()
-                    headerTv.text = header.toString()
-                    bodyTv.text = response
+                for (headerKey in headers.keys) {
+                    conn.setRequestProperty(headerKey, headers[headerKey])
                 }
+                val reqHeaders = conn.requestProperties
+                Log.d(TAG, "Request Header: $reqHeaders")
 
-            } else { //an error occurred
+                val responseCode = conn.responseCode
 
-                // Update UI
-                handler.post {
-                    responseCodeTv.text = responseCode.toString()
-                    errorTv.text =
-                        buildString {
-                            append("Did not receive successful HTTP response, status code = ")
-                            append(responseCodeTv.text)
-                            append(", status message: [")
-                            append(conn.responseMessage)
-                            append("]")
-                        }
+                if (responseCode == HttpURLConnection.HTTP_OK) {  // read the response
+                    val response = Util.responseBuilder(conn.inputStream)
+                    val header = conn.headerFields
+                    //update UI
+                    handler.post {
+                        responseCodeTv.text = responseCode.toString()
+                        headerTv.text = header.toString()
+                        bodyTv.text = response
+                    }
+
+                } else { //an error occurred
+                    // Update UI
+                    handler.post {
+                        responseCodeTv.text = responseCode.toString()
+                        errorTv.text =
+                            buildString {
+                                append("Did not receive successful HTTP response, status code = ")
+                                append(responseCodeTv.text)
+                                append(", status message: [")
+                                append(conn.responseMessage)
+                                append("]")
+                            }
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, e.message.toString())
+                handler.post{
+                    errorTv.text = e.message.toString()
+                }
+            } finally {
+                conn?.disconnect()
             }
 
         }
@@ -127,6 +135,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun postRequest() {
         Log.d(TAG, "---POST Request---")
+
+        //Create Background thread
+        val runnable = Runnable {
+            //
+        }
+        val thread = Thread(runnable)
+        thread.start()
     }
 
     private fun resetViews() {
