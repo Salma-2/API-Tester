@@ -1,5 +1,7 @@
 package com.salma.apitester
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             val selectedRequest = radioGroup.checkedRadioButtonId
             resetViews()
 
-            if (Util.checkInternetConnection(this)) {
+            if (checkInternetConnection()) {
                 if (selectedRequest == R.id.post_rb) {
                     postRequest()
                 } else if (selectedRequest == R.id.get_rb) {
@@ -67,8 +69,7 @@ class MainActivity : AppCompatActivity() {
         // Inputs
         val urlInput = findViewById<EditText>(R.id.url_et).text.toString()
         val headerInput = findViewById<EditText>(R.id.header_et).text.toString()
-        // Build Headers
-        val headers = Util.headerBuilder(headerInput)
+
         // Create Background Thread
         val runnable = Runnable {
             //Create HTTP connection
@@ -78,8 +79,11 @@ class MainActivity : AppCompatActivity() {
                 conn = url.openConnection() as HttpURLConnection
 
                 //Add headers
-                for (headerKey in headers.keys) {
-                    conn.setRequestProperty(headerKey, headers[headerKey])
+                if (headerInput != "") {
+                    val headers = JSONObject(headerInput)
+                    for (headerKey in headers.keys()) {
+                        conn.setRequestProperty(headerKey, headers.get(headerKey).toString())
+                    }
                 }
                 val reqHeaders = conn.requestProperties
                 Log.d(TAG, "Request Header: $reqHeaders")
@@ -132,8 +136,7 @@ class MainActivity : AppCompatActivity() {
         val urlInput = findViewById<EditText>(R.id.url_et).text.toString()
         val headerInput = findViewById<EditText>(R.id.header_et).text.toString()
         val bodyInput = findViewById<EditText>(R.id.body_et).text.toString()
-        // Build Headers
-        val headers = Util.headerBuilder(headerInput)
+
         //Create Background thread
         val runnable = Runnable {
             // Create Http Connection
@@ -145,11 +148,15 @@ class MainActivity : AppCompatActivity() {
                 // to be able to write content to the connection output stream
                 conn.doOutput = true
 
+
                 //Add headers
                 conn.setRequestProperty("Content-Type", "application/json")  //to send the request body in JSON format
                 conn.setRequestProperty("Accept", "application/json")
-                for (header in headers.keys) {
-                    conn.setRequestProperty(header, headers[header])
+                if (headerInput != "") {
+                    val headers = JSONObject(headerInput)
+                    for (headerKey in headers.keys()) {
+                        conn.setRequestProperty(headerKey, headers.get(headerKey).toString())
+                    }
                 }
 
                 val reqHeaders = conn.requestProperties
@@ -206,6 +213,11 @@ class MainActivity : AppCompatActivity() {
         headerTv.text = ""
         bodyTv.text = ""
         errorTv.text = ""
+    }
+
+    private fun checkInternetConnection(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetwork != null
     }
 
     private fun updateUI(
