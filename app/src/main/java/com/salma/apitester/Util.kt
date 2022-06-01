@@ -1,12 +1,11 @@
 package com.salma.apitester
-
 import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+
 
 class Util {
     companion object {
@@ -23,12 +22,13 @@ class Util {
                     headers[key] = value
                 }
             }
-
-            // TODO: Check that all headers are valid
             return headers
         }
 
+
         fun responseBuilder(input: InputStream): StringBuilder {
+            val start= System.currentTimeMillis()
+
             val response = StringBuilder()
             val inputStream = InputStreamReader(input)
             val br = BufferedReader(inputStream)
@@ -39,6 +39,8 @@ class Util {
             }
             inputStream.close()
             br.close()
+            val end= System.currentTimeMillis()
+            Log.d("Time", "${end-start}")
             return response
         }
 
